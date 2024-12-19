@@ -28,7 +28,7 @@ class _JokeListPageState extends State<JokeListPage> {
   Future<void> _loadCachedJokes() async {
     final cachedJokes = await loadCachedJokes();
     setState(() {
-      _cachedJokes = cachedJokes;
+      _cachedJokes = cachedJokes.take(5).toList(); // Limit to 5 jokes
     });
   }
 
@@ -44,7 +44,7 @@ class _JokeListPageState extends State<JokeListPage> {
 
       if (response.statusCode == 200) {
         final jokes = json.decode(response.body) as List;
-        final formattedJokes = jokes.map((joke) {
+        final formattedJokes = jokes.take(5).map((joke) { // Take only 5 jokes
           String setup = joke['setup'];
           String punchline = joke['punchline'];
 
@@ -81,7 +81,7 @@ class _JokeListPageState extends State<JokeListPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(
           widget.title,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

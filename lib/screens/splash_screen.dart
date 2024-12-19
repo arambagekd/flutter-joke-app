@@ -12,11 +12,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToHomePage();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navigateToHomePage();
+    });
   }
 
   Future<void> _navigateToHomePage() async {
     await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return; // Ensure the widget is still mounted before navigating
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -33,7 +36,14 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // App Icon
+            Image.asset(
+              'assets/icon/app_icon.png', // Path to the app icon
+              width: 100,
+              height: 100,
+            ),
             const SizedBox(height: 20),
+            // App Name
             Text(
               'Joke App',
               style: TextStyle(
@@ -44,6 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             const SizedBox(height: 20),
+            // Loading Indicator
             const CircularProgressIndicator(color: Colors.white),
           ],
         ),

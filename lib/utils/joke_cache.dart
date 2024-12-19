@@ -1,17 +1,22 @@
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+
+const String cachedJokesKey = 'cachedJokes';
 
 Future<void> saveJokesToCache(List<Map<String, String>> jokes) async {
   final prefs = await SharedPreferences.getInstance();
-  final updatedJokes = jokes.length > 5 ? jokes.sublist(0, 5) : jokes;
-  await prefs.setString('jokes', json.encode(updatedJokes));
+  final jokesJson = json.encode(jokes);
+  await prefs.setString(cachedJokesKey, jokesJson);
 }
 
 Future<List<Map<String, String>>> loadCachedJokes() async {
   final prefs = await SharedPreferences.getInstance();
-  final cachedJokes = prefs.getString('jokes');
-  if (cachedJokes != null) {
-    return List<Map<String, String>>.from(json.decode(cachedJokes));
+  final jokesJson = prefs.getString(cachedJokesKey);
+
+  if (jokesJson != null) {
+    final jokesList = json.decode(jokesJson) as List;
+    return jokesList.map((joke) => Map<String, String>.from(joke)).toList();
   }
+
   return [];
 }

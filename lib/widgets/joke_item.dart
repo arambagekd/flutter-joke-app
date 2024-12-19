@@ -14,7 +14,7 @@ class JokeItem extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.green[100]!, Colors.green[200]!],
+          colors: [Colors.green[100]!, Colors.green[300]!],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
