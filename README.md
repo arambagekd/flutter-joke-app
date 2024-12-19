@@ -73,8 +73,8 @@ Add these dependencies in the `pubspec.yaml` file:
 dependencies:
    flutter:
       sdk: flutter
-   http: ^0.15.0
-   shared_preferences: ^2.0.0
+   http: ^1.1.0
+   shared_preferences: ^2.0.15
 ```
 
 ---
