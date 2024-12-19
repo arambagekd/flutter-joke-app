@@ -70,10 +70,10 @@ The app fetches jokes from the **Official Joke API**:
 Add these dependencies in the `pubspec.yaml` file:
 ```yaml
 dependencies:
-  flutter:
-    sdk: flutter
-  http: ^0.15.0
-  shared_preferences: ^2.0.0
+   flutter:
+      sdk: flutter
+   http: ^0.15.0
+   shared_preferences: ^2.0.0
 ```
 
 ---
@@ -82,9 +82,9 @@ dependencies:
 
 1. The app starts with a **Splash Screen**, shown for 2 seconds.
 2. It navigates to the **Joke List Page**, which:
-    - Fetches jokes from the API.
-    - Displays cached jokes if the API call fails.
-    - Allows users to refresh jokes via pull-to-refresh or the refresh button.
+   - Fetches jokes from the API.
+   - Displays cached jokes if the API call fails.
+   - Allows users to refresh jokes via pull-to-refresh or the refresh button.
 3. Each joke is displayed with a stylish **Joke Item** widget.
 
 ---
