@@ -37,6 +37,7 @@ lib/
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/arambagekd/flutter-joke-app
+   cd flutter-joke-app
    ```
 
 2. **Install Dependencies**:
