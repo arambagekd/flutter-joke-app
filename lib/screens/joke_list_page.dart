@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/joke_item.dart';
+import '../models/joke.dart';
+import '../service/joke_service.dart';
 import '../utils/joke_cache.dart';
+import '../widgets/joke_item.dart';
 
 class JokeListPage extends StatefulWidget {
   const JokeListPage({super.key, required this.title});
@@ -15,7 +14,8 @@ class JokeListPage extends StatefulWidget {
 }
 
 class _JokeListPageState extends State<JokeListPage> {
-  List<Map<String, String>> _cachedJokes = [];
+  List<Joke> _cachedJokes = [];
+  final JokeService _jokeService = JokeService();
   bool _isLoading = false;
 
   @override
@@ -26,9 +26,9 @@ class _JokeListPageState extends State<JokeListPage> {
   }
 
   Future<void> _loadCachedJokes() async {
-    final cachedJokes = await loadCachedJokes();
+    final cachedJokesJson = await loadCachedJokes();
     setState(() {
-      _cachedJokes = cachedJokes.take(5).toList(); // Limit to 5 jokes
+      _cachedJokes = cachedJokesJson.map((j) => Joke.fromJson(j)).toList();
     });
   }
 
@@ -38,33 +38,15 @@ class _JokeListPageState extends State<JokeListPage> {
     });
 
     try {
-      final response = await http.get(
-        Uri.parse('https://official-joke-api.appspot.com/jokes/ten'),
-      );
-
-      if (response.statusCode == 200) {
-        final jokes = json.decode(response.body) as List;
-        final formattedJokes = jokes.take(5).map((joke) { // Take only 5 jokes
-          String setup = joke['setup'];
-          String punchline = joke['punchline'];
-
-          if (setup.contains('?')) {
-            final parts = setup.split('?');
-            setup = '${parts[0]}?';
-          }
-
-          return {'setup': setup, 'punchline': punchline};
-        }).toList();
-
-        await saveJokesToCache(formattedJokes);
-        setState(() {
-          _cachedJokes = formattedJokes;
-        });
-      }
+      final jokes = await _jokeService.fetchJokes();
+      await saveJokesToCache(jokes.map((joke) => joke.toJson()).toList());
+      setState(() {
+        _cachedJokes = jokes;
+      });
     } catch (e) {
       if (_cachedJokes.isEmpty) {
         setState(() {
-          _cachedJokes = [{'setup': 'No jokes available', 'punchline': 'Oops!'}];
+          _cachedJokes = [Joke(setup: 'No jokes available...', punchline: 'Please connect internet first time you using the app!')];
         });
       }
     } finally {
@@ -109,7 +91,8 @@ class _JokeListPageState extends State<JokeListPage> {
               ),
             )
                 : ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(
+                  vertical: 16.0, horizontal: 10.0),
               itemCount: _cachedJokes.length,
               itemBuilder: (context, index) {
                 final joke = _cachedJokes[index];
