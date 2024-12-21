@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import '../models/joke.dart';
 
 class JokeItem extends StatelessWidget {
-  final Map<String, String> joke;
+  final Joke joke;
 
   const JokeItem({super.key, required this.joke});
 
@@ -31,7 +32,7 @@ class JokeItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            joke['setup']!,
+            joke.setup,
             style: Theme.of(context).textTheme.bodyText1?.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -39,7 +40,7 @@ class JokeItem extends StatelessWidget {
           ),
           const SizedBox(height: 8.0),
           Text(
-            '${joke['punchline']} 😊',
+            '${joke.punchline} 😊',
             style: Theme.of(context).textTheme.bodyText2?.copyWith(
               fontSize: 16,
               fontStyle: FontStyle.italic,
